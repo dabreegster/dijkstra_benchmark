@@ -5,6 +5,7 @@ use std::time::Instant;
 
 use nanorand::{Rng, WyRand};
 use serde::{Deserialize, Serialize};
+use smallvec::SmallVec;
 
 use self::priority_queue::PriorityQueueItem;
 
@@ -13,7 +14,7 @@ mod priority_queue;
 #[derive(Serialize, Deserialize)]
 struct Graph {
     // Index is NodeID
-    edges_per_node: Vec<Vec<Edge>>,
+    edges_per_node: Vec<SmallVec<[Edge; 4]>>,
 }
 
 #[derive(Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord, Hash, Clone, Copy, Debug)]
@@ -41,10 +42,10 @@ fn convert_input() {
 
     println!("Converting into graph");
     let mut graph = Graph {
-        edges_per_node: std::iter::repeat_with(Vec::new).take(9739277).collect(),
+        edges_per_node: std::iter::repeat_with(SmallVec::new).take(9739277).collect(),
     };
     for (from, input_edges) in input {
-        let mut edges = Vec::new();
+        let mut edges = SmallVec::new();
         for array in input_edges {
             edges.push(Edge {
                 to: NodeID(array[1] as u32),
