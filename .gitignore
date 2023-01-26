@@ -1,0 +1,4 @@
+*.swp
+target
+walk_network_full.json
+graph.bin
